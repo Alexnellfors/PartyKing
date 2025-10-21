@@ -1,0 +1,17 @@
+{
+  "name": "partyking",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch:css": "npx @tailwindcss/cli -i ./wwwroot/css/input.css -o ./wwwroot/css/tailwind.css --watch",
+    "build:css": "npx @tailwindcss/cli -i ./wwwroot/css/input.css -o ./wwwroot/css/tailwind.css --minify"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.14",
+    "tailwindcss": "^4.1.14"
+  }
+}

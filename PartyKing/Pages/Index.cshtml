@@ -1,0 +1,91 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+@if (TempData["Message"] != null)
+{
+    <div class="mt-4 mx-auto max-w-md text-center bg-green-500/30 border border-green-400/50 text-white backdrop-blur-md rounded-xl py-3 px-6 shadow-lg animate-fade-in">
+        @TempData["Message"]
+    </div>
+}
+
+
+<form method="post" asp-page-handler="FetchAll" class="text-center mt-6">
+    <button type="submit"
+            class="bg-gradient-to-r from-red-500 to-orange-500 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:scale-105 hover:shadow-xl active:scale-95 transition">
+        Check your PokéIndex!
+    </button>
+</form>
+
+@if (Model.Pokemons?.Count > 0)
+{
+    <p class="animate-bounce text-center text-black-300 font-extrabold drop-shadow-[0_0_8px_rgba(255,255,0,0.8)] mt-4">
+        @Model.Pokemons.Count found!
+    </p>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mt-6 px-6">
+        @foreach (var p in Model.Pokemons)
+        {
+            //TODO: make the cards "clickable" so we can fetch additional information via api.'
+            <div class="bg-white/80 rounded-xl shadow-md hover:scale-105 hover:shadow-xl transition p-4 flex flex-col items-center">
+                <img src="@p.Image"
+                     alt="@p.Name"
+                     class="w-24 h-24 object-contain drop-shadow-lg mb-2" />
+                <span class="text-gray-800 font-semibold capitalize">
+                    @p.Name
+                </span>
+            </div>
+        }
+    </div>
+}
+
+
+<form method="post" asp-page-handler="CatchPokemon" class="text-center mt-4">
+    <button type="submit"
+            class="bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:scale-105 hover:shadow-xl active:scale-95 transition">
+        Go out and catch Pokémons!
+    </button>
+</form>
+
+
+@if (Model.Pokemon != null)
+{
+    <div class="mt-4 mx-auto max-w-md text-center bg-green-500/30 border border-green-400/50 text-white backdrop-blur-md rounded-xl py-3 px-6 shadow-lg animate-fade-in">
+        <h3 class="text-3xl font-extrabold text-white drop-shadow-lg">
+            You found
+            <span class="animate-bounce text-yellow-300 font-extrabold drop-shadow-[0_0_8px_rgba(255,255,0,0.8)]">
+                @Model.Pokemon.Name!
+            </span>
+        </h3>
+        <p class="text-lg text-white/90">
+            @(Model.AlreadyExists
+                    ? "You already have this Pokémon, do you want to add it again?"
+                    : "A new Pokémon! Do you want to add it to your PokéIndex?")
+    </p>
+
+        <div class="flex justify-center gap-4 mt-6">
+            <form method="post" asp-page-handler="AddToIndex">
+                <input type="hidden" name="pokemonName" value="@Model.Pokemon.Name" />
+                <input type="hidden" name="pokemonUrl" value="https://pokeapi.co/api/v2/pokemon/@Model.Pokemon.Id" />
+                <input type="hidden" name="pokemonDateTime" value="@Model.CatchDate" />
+                <input type="hidden" name="pokemonId" value="@Model.Pokemon.Id" />
+                <button type="submit"
+                        class="bg-gradient-to-r from-green-500 to-emerald-400 text-white font-semibold py-2 px-6 rounded-full shadow-md hover:scale-105 transition">
+                    Yes
+                </button>
+            </form>
+
+            <form method="post" asp-page-handler="SkipAdd">
+                <input type="hidden" name="pokemonName" value="@Model.Pokemon.Name" />
+                <button type="submit"
+                        class="bg-gradient-to-r from-gray-400 to-gray-500 text-white font-semibold py-2 px-6 rounded-full shadow-md hover:scale-105 transition">
+                    No
+                </button>
+            </form>
+        </div>
+    </div>
+}
+
+
